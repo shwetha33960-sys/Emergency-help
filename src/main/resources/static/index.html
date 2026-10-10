@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Help</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        header {
+            background: #d62828;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+        }
+
+        header h1 {
+            margin: 0 0 10px;
+        }
+
+        header p {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            color: #d62828;
+            margin-top: 0;
+        }
+
+        button {
+            background: #d62828;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            margin: 5px;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .service-button {
+            background: #1769aa;
+        }
+
+        #locationResult {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-wrap: anywhere;
+            white-space: pre-line;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .success {
+            color: #176b32;
+            background: #e7f6eb;
+        }
+
+        .error {
+            color: #b00020;
+            background: #ffe5e8;
+            border: 1px solid #ffb3bd;
+        }
+
+        .loading {
+            margin-top: 15px;
+            padding: 12px;
+            background: #fff3cd;
+            border-radius: 6px;
+        }
+
+        .service-results {
+            margin-top: 15px;
+        }
+
+        .service-item {
+            background: #f4f7fb;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #1769aa;
+        }
+
+        .service-item h3 {
+            margin: 0 0 8px;
+            font-size: 17px;
+        }
+
+        .service-item p {
+            margin: 5px 0;
+            color: #444;
+        }
+
+        .service-item a {
+            display: inline-block;
+            margin-top: 8px;
+            color: #1769aa;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .service-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* SOS section */
+        .sos-container {
+            text-align: center;
+            padding: 15px;
+            background: #fff;
+        }
+
+        .sos-button {
+            background: #b00020;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px 25px;
+        }
+
+        .sos-panel {
+            max-width: 500px;
+            margin: 15px auto;
+            padding: 20px;
+            border: 2px solid #d62828;
+            border-radius: 12px;
+            background: #fff5f5;
+        }
+
+        .sos-call {
+            display: block;
+            padding: 12px;
+            margin: 10px 0;
+            background: #1769aa;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .sos-call.ambulance {
+            background: #b00020;
+        }
+
+        .sos-close {
+            background: #555;
+        }
+
+        .sos-note {
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* Emergency contacts */
+        .contacts-section {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 24px;
+            background: #f8fbff;
+            border: 1px solid #d8e5f2;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .contacts-section h2 {
+            color: #1b3a57;
+            margin-top: 0;
+        }
+
+        .contacts-section label {
+            display: block;
+            margin-top: 14px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .contacts-section input {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #b8c7d6;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .save-contact-btn {
+            width: 100%;
+            margin-top: 18px;
+            padding: 13px;
+            background: #176b3a;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .contact-card {
+            margin-top: 14px;
+            padding: 15px;
+            background: white;
+            border: 1px solid #d8e5f2;
+            border-radius: 10px;
+        }
+
+        .contact-card h3 {
+            margin: 0 0 8px;
+            color: #1b3a57;
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .contact-actions a,
+        .contact-actions button {
+            padding: 9px 13px;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .call-contact-btn {
+            background: #176b3a;
+            color: white;
+        }
+
+        .edit-contact-btn {
+            background: #1565c0;
+            color: white;
+        }
+
+        .delete-contact-btn {
+            background: #c62828;
+            color: white;
+        }
+
+        #contactMessage {
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 12px;
+                margin: 15px auto;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .contacts-section {
+                margin: 15px;
+                padding: 18px;
+            }
+
+            .contact-actions {
+                flex-direction: column;
+            }
+
+            .contact-actions a,
+            .contact-actions button {
+                text-align: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Emergency SOS Button -->
+    <div class="sos-container">
+        <button
+            type="button"
+            id="sosButton"
+            class="sos-button"
+            onclick="toggleSOSPanel()"
+            aria-expanded="false"
+            aria-controls="sosPanel">
+            🚨 EMERGENCY SOS
+        </button>
+
+        <div id="sosPanel" class="sos-panel" hidden>
+            <h2>Emergency Help</h2>
+            <p>Choose a service to contact.</p>
+
+            <a class="sos-call ambulance" href="tel:112">
+                📞 Call Emergency Services — 112
+            </a>
+
+            <a class="sos-call" href="tel:108">
+                🚑 Call Ambulance — 108
+            </a>
+
+            <a class="sos-call" href="tel:100">
+                👮 Call Police — 100
+            </a>
+
+            <a class="sos-call" href="tel:101">
+                🔥 Call Fire Services — 101
+            </a>
+
+            <button
+                type="button"
+                class="sos-close"
+                onclick="toggleSOSPanel(false)">
+                Close
+            </button>
+
+            <p class="sos-note">
+                Your device may ask you to confirm the call.
+                If you are in immediate danger, contact emergency services.
+            </p>
+        </div>
+    </div>
+
+    <header>
+        <h1>🚨 Emergency Help</h1>
+        <p>Find nearby emergency services quickly</p>
+    </header>
+
+    <div class="container">
+
+        <!-- Find Location -->
+        <div class="card">
+            <h2>📍 Find My Location</h2>
+            <p>Allow location access to find emergency services near you.</p>
+
+            <button type="button" onclick="findMyLocation()">
+                Find My Location
+            </button>
+
+            <div
+                id="locationResult"
+                class="hidden"
+                role="status"
+                aria-live="polite">
+            </div>
+        </div>
+
+        <!-- Hospitals -->
+        <div class="card">
+            <h2>🏥 Nearby Hospitals</h2>
+            <p>Find hospitals near your current location.</p>
+
+            <button
+                type="button"
+                class="service-button"
+                onclick="findService('hospital')">
+                Find Hospitals
+            </button>
+
+            <div id="hospitalResults" class="service-results"></div>
+        </div>
+
+        <!-- Pharmacies -->
+        <div class="card">
+            <h2>💊 Nearby Pharmacies</h2>
+            <p>Find pharmacies near your current location.</p>
+
+            <button
+                type="button"
+                class="service-button"
+                onclick="findService('pharmacy')">
+                Find Pharmacies
+            </button>
+
+            <div id="pharmacyResults" class="service-results"></div>
+        </div>
+
+        <!-- Police Stations -->
+        <div class="card">
+            <h2>🚔 Nearby Police Stations</h2>
+            <p>Find police stations near your current location.</p>
+
+            <button
+                type="button"
+                class="service-button"
+                onclick="findService('police')">
+                Find Police Stations
+            </button>
+
+            <div id="policeResults" class="service-results"></div>
+        </div>
+
+        <!-- Emergency Numbers -->
+        <div class="card">
+            <h2>📞 Emergency Numbers (India)</h2>
+            <p>Emergency response: <a href="tel:112">112</a></p>
+            <p>Ambulance: <a href="tel:108">108</a></p>
+            <p>Fire service: <a href="tel:101">101</a></p>
+            <p>Police: <a href="tel:100">100</a></p>
+        </div>
+
+    </div>
+
+    <footer style="text-align:center;padding:20px;background:#222;color:white;margin-top:30px;">
+        <p>Emergency Help Website | Stay Safe</p>
+    </footer>
+
+    <script>
+        let currentLatitude = null;
+        let currentLongitude = null;
+        let currentAccuracy = null;
+
+        function showMessage(message, type) {
+            const result = document.getElementById("locationResult");
+            result.className = type;
+            result.textContent = message;
+        }
+
+        // Find the user's current location
+        function findMyLocation() {
+            const result = document.getElementById("locationResult");
+
+            result.className = "loading";
+            result.textContent =
+                "Finding your location... Please wait.";
+
+            if (!navigator.geolocation) {
+                showMessage(
+                    "Your browser does not support location detection.",
+                    "error"
+                );
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    currentLatitude = position.coords.latitude;
+                    currentLongitude = position.coords.longitude;
+                    currentAccuracy = position.coords.accuracy;
+
+                    result.className = "success";
+
+                    result.innerHTML =
+                        "<strong>Location detected successfully!</strong><br>" +
+                        "Latitude: " + currentLatitude.toFixed(6) + "<br>" +
+                        "Longitude: " + currentLongitude.toFixed(6) + "<br>" +
+                        "Estimated accuracy: " +
+                        Math.round(currentAccuracy) + " metres";
+
+                    console.log("Latitude:", currentLatitude);
+                    console.log("Longitude:", currentLongitude);
+                    console.log("Accuracy:", currentAccuracy);
+                },
+
+                function (error) {
+                    let message = "Unable to detect your location.";
+
+                    if (error.code === 1) {
+                        message =
+                            "Location permission denied. Allow location access in your browser.";
+                    } else if (error.code === 2) {
+                        message =
+                            "Your device could not determine your location. Check Windows Location services and Wi-Fi.";
+                    } else if (error.code === 3) {
+                        message =
+                            "Location request timed out. Please try again.";
+                    }
+
+                    showMessage(message, "error");
+                },
+
+                {
+                    enableHighAccuracy: true,
+                    timeout: 60000,
+                    maximumAge: 0
+                }
+            );
+        }
+
+        // Find nearby hospitals, pharmacies, or police stations
+        async function findService(type) {
+            const resultIds = {
+                hospital: "hospitalResults",
+                pharmacy: "pharmacyResults",
+                police: "policeResults"
+            };
+
+            const container = document.getElementById(resultIds[type]);
+
+            if (!container) {
+                console.error("Results container not found:", type);
+                return;
+            }
+
+            if (
+                currentLatitude === null ||
+                currentLongitude === null
+            ) {
+                container.textContent =
+                    "Please click Find My Location first. Then click this button again.";
+
+                findMyLocation();
+                return;
+            }
+
+            container.textContent =
+                "Searching for nearby " + type + " services...";
+
+            try {
+                const url =
+                    "/api/nearby?lat=" +
+                    encodeURIComponent(currentLatitude) +
+                    "&lon=" +
+                    encodeURIComponent(currentLongitude) +
+                    "&type=" +
+                    encodeURIComponent(type);
+
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    const details = await response.text();
+
+                    throw new Error(
+                        "Server returned " + response.status +
+                        (details ? ": " + details : "")
+                    );
+                }
+
+                const data = await response.json();
+
+                if (!data || !Array.isArray(data.elements)) {
+                    throw new Error(
+                        "Unexpected response from the server."
+                    );
+                }
+
+                displayServices(data.elements, container, type);
+
+            } catch (error) {
+                console.error("Nearby service search failed:", error);
+
+                container.textContent =
+                    "Could not load nearby " + type +
+                    " services. Check that your Spring Boot application is running. Details: " +
+                    error.message;
+            }
+        }
+
+        // Display nearby services
+        function displayServices(places, container, type) {
+            container.replaceChildren();
+
+            if (places.length === 0) {
+                container.textContent =
+                    "No mapped " + type +
+                    " services found within 5 km of your detected location.";
+                return;
+            }
+
+            const heading = document.createElement("p");
+            heading.textContent =
+                "Found " + places.length + " nearby results:";
+
+            container.appendChild(heading);
+
+            places.forEach(function (place) {
+                const tags = place.tags || {};
+
+                const item = document.createElement("div");
+                item.className = "service-item";
+
+                const name = document.createElement("h3");
+                name.textContent = tags.name || "Unnamed " + type;
+
+                item.appendChild(name);
+
+                const addressParts = [
+                    tags["addr:housenumber"],
+                    tags["addr:street"],
+                    tags["addr:suburb"],
+                    tags["addr:city"] ||
+                    tags["addr:town"] ||
+                    tags["addr:village"],
+                    tags["addr:postcode"]
+                ].filter(Boolean);
+
+                const address = document.createElement("p");
+
+                address.textContent = addressParts.length
+                    ? addressParts.join(", ")
+                    : "Address not available in map data";
+
+                item.appendChild(address);
+
+                const latitude = place.lat ?? place.center?.lat;
+                const longitude = place.lon ?? place.center?.lon;
+
+                if (latitude != null && longitude != null) {
+                    const mapLink = document.createElement("a");
+
+                    mapLink.href =
+                        "https://www.openstreetmap.org/?mlat=" +
+                        encodeURIComponent(latitude) +
+                        "&mlon=" +
+                        encodeURIComponent(longitude) +
+                        "#map=18/" + latitude + "/" + longitude;
+
+                    mapLink.target = "_blank";
+                    mapLink.rel = "noopener noreferrer";
+                    mapLink.textContent = "View on OpenStreetMap";
+
+                    item.appendChild(mapLink);
+                }
+
+                container.appendChild(item);
+            });
+        }
+
+        // Open or close the SOS panel
+        function toggleSOSPanel(forceOpen) {
+            const panel = document.getElementById("sosPanel");
+            const button = document.getElementById("sosButton");
+
+            if (!panel || !button) {
+                return;
+            }
+
+            const shouldOpen =
+                typeof forceOpen === "boolean"
+                    ? forceOpen
+                    : panel.hidden;
+
+            panel.hidden = !shouldOpen;
+
+            button.setAttribute(
+                "aria-expanded",
+                String(shouldOpen)
+            );
+        }
+    </script>
+
+    <!-- Emergency Contacts Section -->
+    <section id="emergencyContacts" class="contacts-section">
+        <h2>📇 My Emergency Contacts</h2>
+
+        <p>Save trusted people you can contact during an emergency.</p>
+
+        <form id="contactForm">
+            <label for="contactName">Contact Name</label>
+            <input
+                type="text"
+                id="contactName"
+                placeholder="Enter name"
+                required
+                maxlength="80">
+
+            <label for="contactRelation">Relationship</label>
+            <input
+                type="text"
+                id="contactRelation"
+                placeholder="Example: Mother, Friend"
+                required
+                maxlength="50">
+
+            <label for="contactPhone">Phone Number</label>
+            <input
+                type="tel"
+                id="contactPhone"
+                placeholder="Enter phone number"
+                required
+                maxlength="20">
+
+            <button type="submit" class="save-contact-btn">
+                Save Contact
+            </button>
+        </form>
+
+        <p id="contactMessage" role="status"></p>
+
+        <div id="contactList">
+            <p>No emergency contacts saved yet.</p>
+        </div>
+    </section>
+
+    <script>
+        const contactForm = document.getElementById("contactForm");
+        const contactList = document.getElementById("contactList");
+        const contactMessage = document.getElementById("contactMessage");
+
+        const CONTACTS_API = "/api/contacts";
+
+        // Load and display contacts from the database
+        async function renderContacts() {
+            contactList.replaceChildren();
+
+            const loading = document.createElement("p");
+            loading.textContent = "Loading emergency contacts...";
+
+            contactList.appendChild(loading);
+
+            try {
+                const response = await fetch(CONTACTS_API);
+
+                if (!response.ok) {
+                    throw new Error("Could not load contacts.");
+                }
+
+                const contacts = await response.json();
+
+                contactList.replaceChildren();
+
+                if (contacts.length === 0) {
+                    const emptyMessage = document.createElement("p");
+
+                    emptyMessage.textContent =
+                        "No emergency contacts saved yet.";
+
+                    contactList.appendChild(emptyMessage);
+                    return;
+                }
+
+                contacts.forEach(function (contact) {
+                    const card = document.createElement("div");
+                    card.className = "contact-card";
+
+                    const name = document.createElement("h3");
+                    name.textContent = contact.name;
+
+                    const relation = document.createElement("p");
+                    relation.textContent =
+                        "Relationship: " + contact.relation;
+
+                    const phone = document.createElement("p");
+                    phone.textContent = "Phone: " + contact.phone;
+
+                    const actions = document.createElement("div");
+                    actions.className = "contact-actions";
+
+                    const callButton = document.createElement("a");
+                    callButton.className = "call-contact-btn";
+                    callButton.textContent = "📞 Call";
+                    callButton.href =
+                        "tel:" + contact.phone.replace(/[^\d+]/g, "");
+
+                    const editButton = document.createElement("button");
+                    editButton.className = "edit-contact-btn";
+                    editButton.textContent = "✏️ Edit";
+                    editButton.type = "button";
+
+                    editButton.addEventListener("click", function () {
+                        editContact(contact);
+                    });
+
+                    const deleteButton = document.createElement("button");
+                    deleteButton.className = "delete-contact-btn";
+                    deleteButton.textContent = "Delete";
+                    deleteButton.type = "button";
+
+                    deleteButton.addEventListener("click", function () {
+                        deleteContact(contact.id);
+                    });
+
+                    actions.append(
+                        callButton,
+                        editButton,
+                        deleteButton
+                    );
+
+                    card.append(
+                        name,
+                        relation,
+                        phone,
+                        actions
+                    );
+
+                    contactList.appendChild(card);
+                });
+
+            } catch (error) {
+                contactList.replaceChildren();
+
+                const errorMessage = document.createElement("p");
+
+                errorMessage.textContent =
+                    "Could not load contacts. Check that your Spring Boot application is running.";
+
+                contactList.appendChild(errorMessage);
+                contactMessage.textContent = error.message;
+            }
+        }
+
+        // Save a new emergency contact
+        contactForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const name =
+                document.getElementById("contactName").value.trim();
+
+            const relation =
+                document.getElementById("contactRelation").value.trim();
+
+            const phone =
+                document.getElementById("contactPhone").value.trim();
+
+            const digits = phone.replace(/\D/g, "");
+
+            if (!name || !relation || !phone) {
+                contactMessage.textContent =
+                    "Please fill in all fields.";
+                return;
+            }
+
+            if (
+                digits.length < 7 ||
+                digits.length > 15 ||
+                !/^[+0-9() -]+$/.test(phone)
+            ) {
+                contactMessage.textContent =
+                    "Please enter a valid phone number.";
+                return;
+            }
+
+            const saveButton = contactForm.querySelector(
+                'button[type="submit"]'
+            );
+
+            saveButton.disabled = true;
+            contactMessage.textContent = "Saving contact...";
+
+            try {
+                const response = await fetch(CONTACTS_API, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        relation: relation,
+                        phone: phone
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorBody = await response
+                        .json()
+                        .catch(() => ({}));
+
+                    throw new Error(
+                        errorBody.detail ||
+                        errorBody.message ||
+                        "Could not save contact."
+                    );
+                }
+
+                contactForm.reset();
+
+                contactMessage.textContent =
+                    "Contact saved to MySQL!";
+
+                await renderContacts();
+
+            } catch (error) {
+                contactMessage.textContent =
+                    "Save failed: " + error.message;
+
+            } finally {
+                saveButton.disabled = false;
+            }
+        });
+
+        // Delete an emergency contact
+        async function deleteContact(contactId) {
+            if (!confirm("Are you sure you want to delete this contact?")) {
+                return;
+            }
+
+            contactMessage.textContent = "Deleting contact...";
+
+            try {
+                const response = await fetch(
+                    CONTACTS_API + "/" + encodeURIComponent(contactId),
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Could not delete contact.");
+                }
+
+                contactMessage.textContent = "Contact deleted.";
+
+                await renderContacts();
+
+            } catch (error) {
+                contactMessage.textContent =
+                    "Delete failed: " + error.message;
+            }
+        }
+
+        // Edit an existing emergency contact
+        async function editContact(contact) {
+            const newName = prompt(
+                "Enter contact name:",
+                contact.name
+            );
+
+            if (newName === null) {
+                return;
+            }
+
+            const newRelation = prompt(
+                "Enter relationship:",
+                contact.relation
+            );
+
+            if (newRelation === null) {
+                return;
+            }
+
+            const newPhone = prompt(
+                "Enter phone number:",
+                contact.phone
+            );
+
+            if (newPhone === null) {
+                return;
+            }
+
+            const name = newName.trim();
+            const relation = newRelation.trim();
+            const phone = newPhone.trim();
+            const digits = phone.replace(/\D/g, "");
+
+            if (!name || !relation || !phone) {
+                contactMessage.textContent =
+                    "Please fill in all fields.";
+                return;
+            }
+
+            if (
+                digits.length < 7 ||
+                digits.length > 15 ||
+                !/^[+0-9() -]+$/.test(phone)
+            ) {
+                contactMessage.textContent =
+                    "Please enter a valid phone number.";
+                return;
+            }
+
+            contactMessage.textContent = "Updating contact...";
+
+            try {
+                const response = await fetch(
+                    CONTACTS_API + "/" + encodeURIComponent(contact.id),
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            relation: relation,
+                            phone: phone
+                        })
+                    }
+                );
+
+                if (!response.ok) {
+                    const errorBody = await response
+                        .json()
+                        .catch(() => ({}));
+
+                    throw new Error(
+                        errorBody.detail ||
+                        errorBody.message ||
+                        "Could not update contact."
+                    );
+                }
+
+                contactMessage.textContent =
+                    "Contact updated successfully!";
+
+                await renderContacts();
+
+            } catch (error) {
+                contactMessage.textContent =
+                    "Update failed: " + error.message;
+            }
+        }
+
+        // Load contacts when the page opens
+        renderContacts();
+    </script>
+
+</body>
+</html>

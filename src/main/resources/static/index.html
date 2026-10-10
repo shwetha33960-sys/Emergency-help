@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emergency Help</title>
-    <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
     <style>
         * {
@@ -67,16 +65,20 @@
         }
 
         button:hover {
-            opacity: 0.85;
+            background: #a71919;
         }
 
         button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
+            opacity: 0.65;
+            cursor: wait;
         }
 
         .service-button {
             background: #1769aa;
+        }
+
+        .service-button:hover {
+            background: #104d80;
         }
 
         #locationResult {
@@ -103,10 +105,8 @@
         }
 
         .loading {
-            margin-top: 15px;
-            padding: 12px;
-            background: #fff3cd;
-            border-radius: 6px;
+            color: #174c75;
+            background: #e8f3fc;
         }
 
         .service-results {
@@ -133,7 +133,7 @@
 
         .service-item a {
             display: inline-block;
-            margin-top: 8px;
+            margin: 8px 12px 0 0;
             color: #1769aa;
             font-weight: bold;
             text-decoration: none;
@@ -143,37 +143,123 @@
             text-decoration: underline;
         }
 
-        /* SOS section */
+        #nearbyMap {
+            height: 420px;
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 18px;
+            z-index: 1;
+            border: 1px solid #d6e0ea;
+        }
+
+        .map-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 14px;
+            font-size: 14px;
+        }
+
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .legend-dot {
+            display: inline-block;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+        }
+
+        .legend-hospital {
+            background: #d62828;
+        }
+
+        .legend-pharmacy {
+            background: #239b56;
+        }
+
+        .legend-police {
+            background: #2878d0;
+        }
+
+        .legend-user {
+            background: #6f42c1;
+        }
+
+        .service-map-marker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border: 2px solid white;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            box-shadow: 0 2px 7px rgba(0, 0, 0, 0.35);
+            color: white;
+            font-size: 17px;
+        }
+
+        .service-map-marker span {
+            transform: rotate(45deg);
+        }
+
+        .marker-hospital {
+            background: #d62828;
+        }
+
+        .marker-pharmacy {
+            background: #239b56;
+        }
+
+        .marker-police {
+            background: #2878d0;
+        }
+
+        .marker-user {
+            background: #6f42c1;
+        }
+
         .sos-container {
-            text-align: center;
-            padding: 15px;
-            background: #fff;
+            max-width: 900px;
+            margin: 18px auto 0;
+            padding: 0 20px;
         }
 
         .sos-button {
+            width: 100%;
             background: #b00020;
             font-size: 18px;
             font-weight: bold;
-            padding: 15px 25px;
+            padding: 16px;
+            margin: 0;
+        }
+
+        .sos-button:hover {
+            background: #7d0017;
         }
 
         .sos-panel {
-            max-width: 500px;
-            margin: 15px auto;
-            padding: 20px;
+            background: #fff;
             border: 2px solid #d62828;
             border-radius: 12px;
-            background: #fff5f5;
+            padding: 18px;
+            margin-top: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
         }
 
         .sos-call {
             display: block;
-            padding: 12px;
             margin: 10px 0;
+            padding: 13px;
             background: #1769aa;
-            color: white;
+            color: #fff;
             text-decoration: none;
-            border-radius: 6px;
+            font-weight: bold;
+            border-radius: 7px;
         }
 
         .sos-call.ambulance {
@@ -189,7 +275,6 @@
             color: #555;
         }
 
-        /* Emergency contacts */
         .contacts-section {
             max-width: 600px;
             margin: 30px auto;
@@ -226,8 +311,16 @@
             margin-top: 18px;
             padding: 13px;
             background: #176b3a;
+            color: white;
+            border: none;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save-contact-btn:hover {
+            background: #10532c;
         }
 
         .contact-card {
@@ -252,6 +345,7 @@
 
         .contact-actions a,
         .contact-actions button {
+            display: inline-block;
             padding: 9px 13px;
             border: none;
             border-radius: 6px;
@@ -266,11 +360,6 @@
             color: white;
         }
 
-        .edit-contact-btn {
-            background: #1565c0;
-            color: white;
-        }
-
         .delete-contact-btn {
             background: #c62828;
             color: white;
@@ -278,6 +367,15 @@
 
         #contactMessage {
             font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #222;
+            color: white;
+            margin-top: 30px;
         }
 
         @media (max-width: 600px) {
@@ -290,35 +388,24 @@
                 padding: 18px;
             }
 
+            .sos-container {
+                padding: 0 12px;
+            }
+
+            #nearbyMap {
+                height: 340px;
+            }
+
             .contacts-section {
-                margin: 15px;
+                margin: 20px 12px;
                 padding: 18px;
             }
-
-            .contact-actions {
-                flex-direction: column;
-            }
-
-            .contact-actions a,
-            .contact-actions button {
-                text-align: center;
-                width: 100%;
-            }
         }
-
-        #nearbyMap {
-    height: 400px;
-    width: 100%;
-    border-radius: 12px;
-    margin-top: 20px;
-    z-index: 1;
-}
     </style>
 </head>
 
 <body>
 
-    <!-- Emergency SOS Button -->
     <div class="sos-container">
         <button
             type="button"
@@ -350,16 +437,13 @@
                 🔥 Call Fire Services — 101
             </a>
 
-            <button
-                type="button"
-                class="sos-close"
-                onclick="toggleSOSPanel(false)">
+            <button type="button" class="sos-close" onclick="toggleSOSPanel(false)">
                 Close
             </button>
 
             <p class="sos-note">
-                Your device may ask you to confirm the call.
-                If you are in immediate danger, contact emergency services.
+                Your device may ask you to confirm the call. If you are in immediate danger,
+                contact emergency services.
             </p>
         </div>
     </div>
@@ -369,10 +453,9 @@
         <p>Find nearby emergency services quickly</p>
     </header>
 
-    <div class="container">
+    <main class="container">
 
-        <!-- Find Location -->
-        <div class="card">
+        <section class="card">
             <h2>📍 Find My Location</h2>
             <p>Allow location access to find emergency services near you.</p>
 
@@ -380,157 +463,165 @@
                 Find My Location
             </button>
 
-            <div
-                id="locationResult"
-                class="hidden"
-                role="status"
-                aria-live="polite">
-            </div>
-        </div>
+            <div id="locationResult" class="hidden" role="status" aria-live="polite"></div>
+        </section>
 
-        <!-- Hospitals -->
-        <div class="card">
+        <section class="card">
             <h2>🏥 Nearby Hospitals</h2>
             <p>Find hospitals near your current location.</p>
 
-            <button
-                type="button"
-                class="service-button"
-                onclick="findService('hospital')">
+            <button type="button" class="service-button" onclick="findService('hospital')">
                 Find Hospitals
             </button>
 
             <div id="hospitalResults" class="service-results"></div>
-        </div>
+        </section>
 
-        <!-- Pharmacies -->
-        <div class="card">
+        <section class="card">
             <h2>💊 Nearby Pharmacies</h2>
             <p>Find pharmacies near your current location.</p>
 
-            <button
-                type="button"
-                class="service-button"
-                onclick="findService('pharmacy')">
+            <button type="button" class="service-button" onclick="findService('pharmacy')">
                 Find Pharmacies
             </button>
 
             <div id="pharmacyResults" class="service-results"></div>
-        </div>
+        </section>
 
-        <!-- Police Stations -->
-       
-        <!-- Police Stations -->
-        <div class="card">
+        <section class="card">
             <h2>🚔 Nearby Police Stations</h2>
             <p>Find police stations near your current location.</p>
 
-            <button
-                type="button"
-                class="service-button"
-                onclick="findService('police')">
+            <button type="button" class="service-button" onclick="findService('police')">
                 Find Police Stations
             </button>
 
             <div id="policeResults" class="service-results"></div>
-        </div>
+        </section>
 
-        <!-- Interactive Map -->
-        <div class="card">
+        <section class="card">
             <h2>🗺️ Nearby Emergency Services Map</h2>
             <p>
-                View nearby hospitals, pharmacies, and police stations
-                on the map.
+                Search for a service above to show its markers on the map.
+                Click a marker to view its name.
             </p>
 
-            <div id="nearbyMap"></div>
-        </div>
+            <div class="map-legend" aria-label="Map marker legend">
+                <span class="legend-item">
+                    <span class="legend-dot legend-hospital"></span>
+                    Hospitals
+                </span>
 
+                <span class="legend-item">
+                    <span class="legend-dot legend-pharmacy"></span>
+                    Pharmacies
+                </span>
 
-        <!-- Emergency Numbers -->
-        <div class="card">
+                <span class="legend-item">
+                    <span class="legend-dot legend-police"></span>
+                    Police stations
+                </span>
+
+                <span class="legend-item">
+                    <span class="legend-dot legend-user"></span>
+                    Your location
+                </span>
+            </div>
+
+            <div id="nearbyMap" aria-label="Map showing nearby emergency services"></div>
+        </section>
+
+        <section class="card">
             <h2>📞 Emergency Numbers (India)</h2>
             <p>Emergency response: <a href="tel:112">112</a></p>
             <p>Ambulance: <a href="tel:108">108</a></p>
             <p>Fire service: <a href="tel:101">101</a></p>
             <p>Police: <a href="tel:100">100</a></p>
-        </div>
+        </section>
 
-    </div>
+    </main>
 
-    <footer style="text-align:center;padding:20px;background:#222;color:white;margin-top:30px;">
+    <footer>
         <p>Emergency Help Website | Stay Safe</p>
     </footer>
-    ```html
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
         let currentLatitude = null;
         let currentLongitude = null;
         let currentAccuracy = null;
-        
-const nearbyMap = L.map("nearbyMap").setView([9.9312, 76.2673], 12);
+        let userMarker = null;
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(nearbyMap);
+        // Default starting view only; this is not the user's current location.
+        const nearbyMap = L.map("nearbyMap").setView([9.9312, 76.2673], 12);
 
-let userMarker = null;
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(nearbyMap);
 
-const serviceLayers = {
-    hospital: L.layerGroup().addTo(nearbyMap),
-    pharmacy: L.layerGroup().addTo(nearbyMap),
-    police: L.layerGroup().addTo(nearbyMap)
-};
+        const serviceLayers = {
+            hospital: L.layerGroup().addTo(nearbyMap),
+            pharmacy: L.layerGroup().addTo(nearbyMap),
+            police: L.layerGroup().addTo(nearbyMap)
+        };
 
+        const markerDetails = {
+            hospital: {
+                colorClass: "marker-hospital",
+                icon: "✚",
+                label: "Hospital"
+            },
+            pharmacy: {
+                colorClass: "marker-pharmacy",
+                icon: "+",
+                label: "Pharmacy"
+            },
+            police: {
+                colorClass: "marker-police",
+                icon: "★",
+                label: "Police station"
+            }
+        };
 
-function updateMapWithServices(places, type) {
-    const layer = serviceLayers[type];
+        const userIcon = L.divIcon({
+            className: "",
+            html: '<div class="service-map-marker marker-user"><span>●</span></div>',
+            iconSize: [34, 34],
+            iconAnchor: [17, 34],
+            popupAnchor: [0, -32]
+        });
 
-    if (!layer) return;
+        function createServiceIcon(type) {
+            const details = markerDetails[type] || {
+                colorClass: "marker-hospital",
+                icon: "•"
+            };
 
-    // Remove old markers for this category
-    layer.clearLayers();
-
-    places.forEach(place => {
-        const lat = place.lat ?? place.center?.lat;
-        const lon = place.lon ?? place.center?.lon;
-
-        if (lat == null || lon == null) return;
-
-        const tags = place.tags || {};
-
-        // Safely create the popup content
-        const popup = document.createElement("div");
-        const name = document.createElement("strong");
-
-        name.textContent = tags.name || `Unnamed ${type}`;
-        popup.appendChild(name);
-        popup.appendChild(document.createElement("br"));
-        popup.appendChild(document.createTextNode(type));
-
-        L.marker([lat, lon])
-            .bindPopup(popup)
-            .addTo(layer);
-    });
-}
-
-
+            return L.divIcon({
+                className: "",
+                html: '<div class="service-map-marker ' +
+                    details.colorClass + '"><span>' +
+                    details.icon + '</span></div>',
+                iconSize: [34, 34],
+                iconAnchor: [17, 34],
+                popupAnchor: [0, -32]
+            });
+        }
 
         function showMessage(message, type) {
             const result = document.getElementById("locationResult");
+
             result.className = type;
             result.textContent = message;
         }
 
-        // Find the user's current location
         function findMyLocation() {
             const result = document.getElementById("locationResult");
 
             result.className = "loading";
-            result.textContent =
-                "Finding your location... Please wait.";
+            result.textContent = "Finding your precise location... Please wait.";
 
             if (!navigator.geolocation) {
                 showMessage(
@@ -545,26 +636,33 @@ function updateMapWithServices(places, type) {
                     currentLatitude = position.coords.latitude;
                     currentLongitude = position.coords.longitude;
                     currentAccuracy = position.coords.accuracy;
-                    
-nearbyMap.setView([currentLatitude, currentLongitude], 14);
 
-if (userMarker) {
-    nearbyMap.removeLayer(userMarker);
-}
+                    nearbyMap.setView(
+                        [currentLatitude, currentLongitude],
+                        14
+                    );
 
-userMarker = L.marker([currentLatitude, currentLongitude])
-    .addTo(nearbyMap)
-    .bindPopup("Your current location");
+                    if (userMarker) {
+                        nearbyMap.removeLayer(userMarker);
+                    }
 
+                    userMarker = L.marker(
+                        [currentLatitude, currentLongitude],
+                        { icon: userIcon }
+                    )
+                        .addTo(nearbyMap)
+                        .bindPopup("Your current location");
 
                     result.className = "success";
-
-                    result.innerHTML =
-                        "<strong>Location detected successfully!</strong><br>" +
-                        "Latitude: " + currentLatitude.toFixed(6) + "<br>" +
-                        "Longitude: " + currentLongitude.toFixed(6) + "<br>" +
+                    result.textContent =
+                        "Location detected successfully!\n" +
+                        "Latitude: " + currentLatitude.toFixed(6) + "\n" +
+                        "Longitude: " + currentLongitude.toFixed(6) + "\n" +
                         "Estimated accuracy: " +
-                        Math.round(currentAccuracy) + " metres";
+                        Math.round(currentAccuracy) + " metres" +
+                        (currentAccuracy > 1000
+                            ? "\nLocation is approximate. Your device may not be providing a precise location."
+                            : "\nLocation accuracy looks better.");
 
                     console.log("Latitude:", currentLatitude);
                     console.log("Longitude:", currentLongitude);
@@ -596,7 +694,6 @@ userMarker = L.marker([currentLatitude, currentLongitude])
             );
         }
 
-        // Find nearby hospitals, pharmacies, or police stations
         async function findService(type) {
             const resultIds = {
                 hospital: "hospitalResults",
@@ -611,12 +708,9 @@ userMarker = L.marker([currentLatitude, currentLongitude])
                 return;
             }
 
-            if (
-                currentLatitude === null ||
-                currentLongitude === null
-            ) {
+            if (currentLatitude === null || currentLongitude === null) {
                 container.textContent =
-                    "Please click Find My Location first. Then click this button again.";
+                    "Please click Find My Location first. Location detection will start now; click this button again after your location is detected.";
 
                 findMyLocation();
                 return;
@@ -665,7 +759,46 @@ userMarker = L.marker([currentLatitude, currentLongitude])
             }
         }
 
-        // Display nearby services
+        function updateMapWithServices(places, type) {
+            const layer = serviceLayers[type];
+
+            if (!layer) {
+                return;
+            }
+
+            // Clear markers for this category only.
+            // Markers from other searched categories remain visible.
+            layer.clearLayers();
+
+            places.forEach(function (place) {
+                const latitude = place.lat ?? place.center?.lat;
+                const longitude = place.lon ?? place.center?.lon;
+
+                if (latitude == null || longitude == null) {
+                    return;
+                }
+
+                const tags = place.tags || {};
+                const popup = document.createElement("div");
+                const name = document.createElement("strong");
+
+                name.textContent = tags.name || "Unnamed " + type;
+
+                popup.appendChild(name);
+                popup.appendChild(document.createElement("br"));
+                popup.appendChild(
+                    document.createTextNode(markerDetails[type].label)
+                );
+
+                L.marker(
+                    [latitude, longitude],
+                    { icon: createServiceIcon(type) }
+                )
+                    .bindPopup(popup)
+                    .addTo(layer);
+            });
+        }
+
         function displayServices(places, container, type) {
             updateMapWithServices(places, type);
             container.replaceChildren();
@@ -673,7 +806,7 @@ userMarker = L.marker([currentLatitude, currentLongitude])
             if (places.length === 0) {
                 container.textContent =
                     "No mapped " + type +
-                    " services found within 5 km of your detected location.";
+                    " services found within the API search area around your detected location.";
                 return;
             }
 
@@ -685,8 +818,8 @@ userMarker = L.marker([currentLatitude, currentLongitude])
 
             places.forEach(function (place) {
                 const tags = place.tags || {};
-
                 const item = document.createElement("div");
+
                 item.className = "service-item";
 
                 const name = document.createElement("h3");
@@ -699,8 +832,8 @@ userMarker = L.marker([currentLatitude, currentLongitude])
                     tags["addr:street"],
                     tags["addr:suburb"],
                     tags["addr:city"] ||
-                    tags["addr:town"] ||
-                    tags["addr:village"],
+                        tags["addr:town"] ||
+                        tags["addr:village"],
                     tags["addr:postcode"]
                 ].filter(Boolean);
 
@@ -730,13 +863,24 @@ userMarker = L.marker([currentLatitude, currentLongitude])
                     mapLink.textContent = "View on OpenStreetMap";
 
                     item.appendChild(mapLink);
+
+                    const directionsLink = document.createElement("a");
+
+                    directionsLink.href =
+                        "https://www.google.com/maps/dir/?api=1&destination=" +
+                        encodeURIComponent(latitude + "," + longitude);
+
+                    directionsLink.target = "_blank";
+                    directionsLink.rel = "noopener noreferrer";
+                    directionsLink.textContent = "Get Directions";
+
+                    item.appendChild(directionsLink);
                 }
 
                 container.appendChild(item);
             });
         }
 
-        // Open or close the SOS panel
         function toggleSOSPanel(forceOpen) {
             const panel = document.getElementById("sosPanel");
             const button = document.getElementById("sosButton");
@@ -751,18 +895,12 @@ userMarker = L.marker([currentLatitude, currentLongitude])
                     : panel.hidden;
 
             panel.hidden = !shouldOpen;
-
-            button.setAttribute(
-                "aria-expanded",
-                String(shouldOpen)
-            );
+            button.setAttribute("aria-expanded", String(shouldOpen));
         }
     </script>
 
-    <!-- Emergency Contacts Section -->
     <section id="emergencyContacts" class="contacts-section">
         <h2>📇 My Emergency Contacts</h2>
-
         <p>Save trusted people you can contact during an emergency.</p>
 
         <form id="contactForm">
@@ -809,7 +947,6 @@ userMarker = L.marker([currentLatitude, currentLongitude])
 
         const CONTACTS_API = "/api/contacts";
 
-        // Load and display contacts from the database
         async function renderContacts() {
             contactList.replaceChildren();
 
@@ -829,7 +966,7 @@ userMarker = L.marker([currentLatitude, currentLongitude])
 
                 contactList.replaceChildren();
 
-                if (contacts.length === 0) {
+                if (!Array.isArray(contacts) || contacts.length === 0) {
                     const emptyMessage = document.createElement("p");
 
                     emptyMessage.textContent =
@@ -859,17 +996,9 @@ userMarker = L.marker([currentLatitude, currentLongitude])
                     const callButton = document.createElement("a");
                     callButton.className = "call-contact-btn";
                     callButton.textContent = "📞 Call";
+
                     callButton.href =
-                        "tel:" + contact.phone.replace(/[^\d+]/g, "");
-
-                    const editButton = document.createElement("button");
-                    editButton.className = "edit-contact-btn";
-                    editButton.textContent = "✏️ Edit";
-                    editButton.type = "button";
-
-                    editButton.addEventListener("click", function () {
-                        editContact(contact);
-                    });
+                        "tel:" + String(contact.phone).replace(/[^\d+]/g, "");
 
                     const deleteButton = document.createElement("button");
                     deleteButton.className = "delete-contact-btn";
@@ -880,18 +1009,8 @@ userMarker = L.marker([currentLatitude, currentLongitude])
                         deleteContact(contact.id);
                     });
 
-                    actions.append(
-                        callButton,
-                        editButton,
-                        deleteButton
-                    );
-
-                    card.append(
-                        name,
-                        relation,
-                        phone,
-                        actions
-                    );
+                    actions.append(callButton, deleteButton);
+                    card.append(name, relation, phone, actions);
 
                     contactList.appendChild(card);
                 });
@@ -909,7 +1028,6 @@ userMarker = L.marker([currentLatitude, currentLongitude])
             }
         }
 
-        // Save a new emergency contact
         contactForm.addEventListener("submit", async function (event) {
             event.preventDefault();
 
@@ -961,9 +1079,7 @@ userMarker = L.marker([currentLatitude, currentLongitude])
                 });
 
                 if (!response.ok) {
-                    const errorBody = await response
-                        .json()
-                        .catch(() => ({}));
+                    const errorBody = await response.json().catch(() => ({}));
 
                     throw new Error(
                         errorBody.detail ||
@@ -973,9 +1089,7 @@ userMarker = L.marker([currentLatitude, currentLongitude])
                 }
 
                 contactForm.reset();
-
-                contactMessage.textContent =
-                    "Contact saved to MySQL!";
+                contactMessage.textContent = "Contact saved to MySQL!";
 
                 await renderContacts();
 
@@ -988,7 +1102,6 @@ userMarker = L.marker([currentLatitude, currentLongitude])
             }
         });
 
-        // Delete an emergency contact
         async function deleteContact(contactId) {
             if (!confirm("Are you sure you want to delete this contact?")) {
                 return;
@@ -999,9 +1112,7 @@ userMarker = L.marker([currentLatitude, currentLongitude])
             try {
                 const response = await fetch(
                     CONTACTS_API + "/" + encodeURIComponent(contactId),
-                    {
-                        method: "DELETE"
-                    }
+                    { method: "DELETE" }
                 );
 
                 if (!response.ok) {
@@ -1018,98 +1129,6 @@ userMarker = L.marker([currentLatitude, currentLongitude])
             }
         }
 
-        // Edit an existing emergency contact
-        async function editContact(contact) {
-            const newName = prompt(
-                "Enter contact name:",
-                contact.name
-            );
-
-            if (newName === null) {
-                return;
-            }
-
-            const newRelation = prompt(
-                "Enter relationship:",
-                contact.relation
-            );
-
-            if (newRelation === null) {
-                return;
-            }
-
-            const newPhone = prompt(
-                "Enter phone number:",
-                contact.phone
-            );
-
-            if (newPhone === null) {
-                return;
-            }
-
-            const name = newName.trim();
-            const relation = newRelation.trim();
-            const phone = newPhone.trim();
-            const digits = phone.replace(/\D/g, "");
-
-            if (!name || !relation || !phone) {
-                contactMessage.textContent =
-                    "Please fill in all fields.";
-                return;
-            }
-
-            if (
-                digits.length < 7 ||
-                digits.length > 15 ||
-                !/^[+0-9() -]+$/.test(phone)
-            ) {
-                contactMessage.textContent =
-                    "Please enter a valid phone number.";
-                return;
-            }
-
-            contactMessage.textContent = "Updating contact...";
-
-            try {
-                const response = await fetch(
-                    CONTACTS_API + "/" + encodeURIComponent(contact.id),
-                    {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            name: name,
-                            relation: relation,
-                            phone: phone
-                        })
-                    }
-                );
-
-                if (!response.ok) {
-                    const errorBody = await response
-                        .json()
-                        .catch(() => ({}));
-
-                    throw new Error(
-                        errorBody.detail ||
-                        errorBody.message ||
-                        "Could not update contact."
-                    );
-                }
-
-                contactMessage.textContent =
-                    "Contact updated successfully!";
-
-                await renderContacts();
-
-            } catch (error) {
-                contactMessage.textContent =
-                    "Update failed: " + error.message;
-            }
-        }
-
-        // Load contacts when the page opens
         renderContacts();
     </script>
 

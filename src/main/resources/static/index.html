@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emergency Help</title>
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 
     <style>
         * {
@@ -301,6 +305,14 @@
                 width: 100%;
             }
         }
+
+        #nearbyMap {
+    height: 400px;
+    width: 100%;
+    border-radius: 12px;
+    margin-top: 20px;
+    z-index: 1;
+}
     </style>
 </head>
 
@@ -407,6 +419,8 @@
         </div>
 
         <!-- Police Stations -->
+       
+        <!-- Police Stations -->
         <div class="card">
             <h2>🚔 Nearby Police Stations</h2>
             <p>Find police stations near your current location.</p>
@@ -420,6 +434,18 @@
 
             <div id="policeResults" class="service-results"></div>
         </div>
+
+        <!-- Interactive Map -->
+        <div class="card">
+            <h2>🗺️ Nearby Emergency Services Map</h2>
+            <p>
+                View nearby hospitals, pharmacies, and police stations
+                on the map.
+            </p>
+
+            <div id="nearbyMap"></div>
+        </div>
+
 
         <!-- Emergency Numbers -->
         <div class="card">
@@ -435,11 +461,62 @@
     <footer style="text-align:center;padding:20px;background:#222;color:white;margin-top:30px;">
         <p>Emergency Help Website | Stay Safe</p>
     </footer>
+    ```html
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
         let currentLatitude = null;
         let currentLongitude = null;
         let currentAccuracy = null;
+        
+const nearbyMap = L.map("nearbyMap").setView([9.9312, 76.2673], 12);
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(nearbyMap);
+
+let userMarker = null;
+
+const serviceLayers = {
+    hospital: L.layerGroup().addTo(nearbyMap),
+    pharmacy: L.layerGroup().addTo(nearbyMap),
+    police: L.layerGroup().addTo(nearbyMap)
+};
+
+
+function updateMapWithServices(places, type) {
+    const layer = serviceLayers[type];
+
+    if (!layer) return;
+
+    // Remove old markers for this category
+    layer.clearLayers();
+
+    places.forEach(place => {
+        const lat = place.lat ?? place.center?.lat;
+        const lon = place.lon ?? place.center?.lon;
+
+        if (lat == null || lon == null) return;
+
+        const tags = place.tags || {};
+
+        // Safely create the popup content
+        const popup = document.createElement("div");
+        const name = document.createElement("strong");
+
+        name.textContent = tags.name || `Unnamed ${type}`;
+        popup.appendChild(name);
+        popup.appendChild(document.createElement("br"));
+        popup.appendChild(document.createTextNode(type));
+
+        L.marker([lat, lon])
+            .bindPopup(popup)
+            .addTo(layer);
+    });
+}
+
+
 
         function showMessage(message, type) {
             const result = document.getElementById("locationResult");
@@ -468,6 +545,17 @@
                     currentLatitude = position.coords.latitude;
                     currentLongitude = position.coords.longitude;
                     currentAccuracy = position.coords.accuracy;
+                    
+nearbyMap.setView([currentLatitude, currentLongitude], 14);
+
+if (userMarker) {
+    nearbyMap.removeLayer(userMarker);
+}
+
+userMarker = L.marker([currentLatitude, currentLongitude])
+    .addTo(nearbyMap)
+    .bindPopup("Your current location");
+
 
                     result.className = "success";
 
@@ -579,6 +667,7 @@
 
         // Display nearby services
         function displayServices(places, container, type) {
+            updateMapWithServices(places, type);
             container.replaceChildren();
 
             if (places.length === 0) {

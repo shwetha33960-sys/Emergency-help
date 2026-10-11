@@ -9,310 +9,570 @@
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 />
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+/* ========================================
+   EMERGENCY HELP - MODERN WEBSITE DESIGN
+   ======================================== */
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            color: #222;
-        }
-
-        header {
-            background: #d62828;
-            color: white;
-            text-align: center;
-            padding: 25px 15px;
-        }
-
-        header h1 {
-            margin: 0 0 10px;
-        }
-
-        header p {
-            margin: 0;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 25px;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        h2 {
-            color: #d62828;
-            margin-top: 0;
-        }
-
-        button {
-            background: #d62828;
-            color: white;
-            border: none;
-            padding: 12px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 15px;
-            margin: 5px;
-        }
-
-        button:hover {
-            opacity: 0.85;
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .service-button {
-            background: #1769aa;
-        }
-
-        #locationResult {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 6px;
-            overflow-wrap: anywhere;
-            white-space: pre-line;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .success {
-            color: #176b32;
-            background: #e7f6eb;
-        }
-
-        .error {
-            color: #b00020;
-            background: #ffe5e8;
-            border: 1px solid #ffb3bd;
-        }
-
-        .loading {
-            margin-top: 15px;
-            padding: 12px;
-            background: #fff3cd;
-            border-radius: 6px;
-        }
-
-        .service-results {
-            margin-top: 15px;
-        }
-
-        .service-item {
-            background: #f4f7fb;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border-left: 4px solid #1769aa;
-        }
-
-        .service-item h3 {
-            margin: 0 0 8px;
-            font-size: 17px;
-        }
-
-        .service-item p {
-            margin: 5px 0;
-            color: #444;
-        }
-
-        .service-item a {
-            display: inline-block;
-            margin-top: 8px;
-            color: #1769aa;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .service-item a:hover {
-            text-decoration: underline;
-        }
-
-        /* SOS section */
-        .sos-container {
-            text-align: center;
-            padding: 15px;
-            background: #fff;
-        }
-
-        .sos-button {
-            background: #b00020;
-            font-size: 18px;
-            font-weight: bold;
-            padding: 15px 25px;
-        }
-
-        .sos-panel {
-            max-width: 500px;
-            margin: 15px auto;
-            padding: 20px;
-            border: 2px solid #d62828;
-            border-radius: 12px;
-            background: #fff5f5;
-        }
-
-        .sos-call {
-            display: block;
-            padding: 12px;
-            margin: 10px 0;
-            background: #1769aa;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-        }
-
-        .sos-call.ambulance {
-            background: #b00020;
-        }
-
-        .sos-close {
-            background: #555;
-        }
-
-        .sos-note {
-            font-size: 13px;
-            color: #555;
-        }
-
-        /* Emergency contacts */
-        .contacts-section {
-            max-width: 600px;
-            margin: 30px auto;
-            padding: 24px;
-            background: #f8fbff;
-            border: 1px solid #d8e5f2;
-            border-radius: 14px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .contacts-section h2 {
-            color: #1b3a57;
-            margin-top: 0;
-        }
-
-        .contacts-section label {
-            display: block;
-            margin-top: 14px;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-
-        .contacts-section input {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #b8c7d6;
-            border-radius: 8px;
-            font-size: 15px;
-        }
-
-        .save-contact-btn {
-            width: 100%;
-            margin-top: 18px;
-            padding: 13px;
-            background: #176b3a;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .contact-card {
-            margin-top: 14px;
-            padding: 15px;
-            background: white;
-            border: 1px solid #d8e5f2;
-            border-radius: 10px;
-        }
-
-        .contact-card h3 {
-            margin: 0 0 8px;
-            color: #1b3a57;
-        }
-
-        .contact-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-
-        .contact-actions a,
-        .contact-actions button {
-            padding: 9px 13px;
-            border: none;
-            border-radius: 6px;
-            text-decoration: none;
-            cursor: pointer;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        .call-contact-btn {
-            background: #176b3a;
-            color: white;
-        }
-
-        .edit-contact-btn {
-            background: #1565c0;
-            color: white;
-        }
-
-        .delete-contact-btn {
-            background: #c62828;
-            color: white;
-        }
-
-        #contactMessage {
-            font-weight: 600;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 12px;
-                margin: 15px auto;
-            }
-
-            .card {
-                padding: 18px;
-            }
-
-            .contacts-section {
-                margin: 15px;
-                padding: 18px;
-            }
-
-            .contact-actions {
-                flex-direction: column;
-            }
-
-            .contact-actions a,
-            .contact-actions button {
-                text-align: center;
-                width: 100%;
-            }
-        }
-
-        #nearbyMap {
-    height: 400px;
-    width: 100%;
-    border-radius: 12px;
-    margin-top: 20px;
-    z-index: 1;
+:root {
+    --primary: #d92d3a;
+    --primary-dark: #b42332;
+    --navy: #14243b;
+    --blue: #1769aa;
+    --blue-dark: #12558c;
+    --green: #18794e;
+    --background: #f3f6fb;
+    --surface: #ffffff;
+    --text: #243247;
+    --muted: #66758a;
+    --border: #e1e8f0;
+    --shadow: 0 8px 28px rgba(20, 36, 59, 0.07);
+    --radius: 16px;
 }
+
+/* Basic reset */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* Main website header */
+
+header {
+    background: linear-gradient(135deg, #14243b, #203e61);
+    color: white;
+    text-align: center;
+    padding: 42px 20px;
+    border-bottom: 5px solid var(--primary);
+}
+
+header h1 {
+    margin: 0 0 8px;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    letter-spacing: -0.8px;
+}
+
+header p {
+    margin: 0;
+    color: #d9e5f2;
+    font-size: 17px;
+}
+
+/* Main content layout */
+
+.container {
+    width: min(1100px, 100%);
+    margin: 30px auto;
+    padding: 0 22px;
+}
+
+/* General content cards */
+
+.card {
+    background: var(--surface);
+    padding: 28px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.2s ease,
+                transform 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: 0 12px 32px rgba(20, 36, 59, 0.10);
+}
+
+h2 {
+    color: var(--navy);
+    margin: 0 0 12px;
+    font-size: 23px;
+    font-weight: 750;
+}
+
+.card > p {
+    color: var(--muted);
+    margin-top: 8px;
+}
+
+/* Buttons */
+
+button {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    margin: 5px 5px 5px 0;
+    transition: background 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(217, 45, 58, 0.18);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+    outline: 3px solid #80bfff;
+    outline-offset: 3px;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.service-button {
+    background: var(--blue);
+}
+
+.service-button:hover {
+    background: var(--blue-dark);
+}
+
+/* Location status messages */
+
+#locationResult {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    overflow-wrap: anywhere;
+    white-space: pre-line;
+}
+
+.hidden,
+[hidden] {
+    display: none !important;
+}
+
+.success {
+    color: #166534;
+    background: #eaf8ef;
+    border: 1px solid #b8e5c6;
+}
+
+.error {
+    color: #a61b29;
+    background: #fff0f1;
+    border: 1px solid #ffc5ca;
+    padding: 12px 14px;
+    border-radius: 9px;
+}
+
+.loading {
+    margin-top: 15px;
+    padding: 14px;
+    color: #805b00;
+    background: #fff7df;
+    border: 1px solid #f3dfa1;
+    border-radius: 10px;
+}
+
+/* Nearby service results */
+
+.service-results {
+    margin-top: 18px;
+}
+
+.service-item {
+    background: #f8faff;
+    padding: 20px;
+    margin: 14px 0;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--blue);
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+.service-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(20, 36, 59, 0.08);
+}
+
+.service-item h3 {
+    margin: 0 0 10px;
+    color: var(--navy);
+    font-size: 18px;
+}
+
+.service-item p {
+    margin: 7px 0;
+    color: #526176;
+    overflow-wrap: anywhere;
+}
+
+.service-item a {
+    display: inline-block;
+    margin: 10px 16px 0 0;
+    color: var(--blue);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.service-item a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* Emergency SOS area */
+
+.sos-container {
+    text-align: center;
+    padding: 22px 15px;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+}
+
+.sos-button {
+    background: var(--primary);
+    font-size: 17px;
+    font-weight: 800;
+    padding: 15px 28px;
+    border-radius: 12px;
+    box-shadow: 0 5px 16px rgba(217, 45, 58, 0.20);
+}
+
+.sos-button:hover {
+    background: var(--primary-dark);
+}
+
+.sos-panel {
+    max-width: 520px;
+    margin: 22px auto 0;
+    padding: 25px;
+    border: 1px solid #ffc5ca;
+    border-top: 5px solid var(--primary);
+    border-radius: 16px;
+    background: #fff7f7;
+    box-shadow: var(--shadow);
+}
+
+.sos-panel h2 {
+    color: var(--primary-dark);
+}
+
+.sos-call {
+    display: block;
+    padding: 14px;
+    margin: 12px 0;
+    background: var(--blue);
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 10px;
+    transition: background 0.2s ease,
+                transform 0.2s ease;
+}
+
+.sos-call:hover {
+    background: var(--blue-dark);
+    transform: translateY(-1px);
+}
+
+.sos-call.ambulance {
+    background: var(--primary);
+}
+
+.sos-call.ambulance:hover {
+    background: var(--primary-dark);
+}
+
+.sos-close {
+    background: #526176;
+}
+
+.sos-close:hover {
+    background: #364356;
+}
+
+.sos-note {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 18px;
+}
+
+/* Emergency numbers */
+
+.card a[href^="tel:"] {
+    color: var(--blue);
+    font-weight: 750;
+    text-decoration: none;
+}
+
+.card a[href^="tel:"]:hover {
+    text-decoration: underline;
+}
+
+/* Interactive map */
+
+#nearbyMap {
+    height: 420px;
+    width: 100%;
+    border-radius: 13px;
+    margin-top: 20px;
+    border: 1px solid var(--border);
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Emergency contacts section */
+
+.contacts-section {
+    width: min(760px, calc(100% - 44px));
+    margin: 32px auto;
+    padding: 30px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.contacts-section h2 {
+    color: var(--navy);
+    margin-top: 0;
+}
+
+.contacts-section > p {
+    color: var(--muted);
+}
+
+.contacts-section label {
+    display: block;
+    margin-top: 17px;
+    margin-bottom: 7px;
+    color: var(--navy);
+    font-weight: 700;
+}
+
+.contacts-section input {
+    display: block;
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #ccd6e2;
+    border-radius: 9px;
+    background: #fbfcfe;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 15px;
+    transition: border-color 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+.contacts-section input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.10);
+    outline: none;
+}
+
+.save-contact-btn {
+    width: 100%;
+    margin: 22px 0 0;
+    padding: 14px;
+    background: var(--green);
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.save-contact-btn:hover {
+    background: #11633f;
+}
+
+/* Individual contact cards */
+
+.contact-card {
+    margin-top: 16px;
+    padding: 20px;
+    background: #f8faff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.contact-card h3 {
+    margin: 0 0 10px;
+    color: var(--navy);
+    font-size: 18px;
+}
+
+.contact-card p {
+    margin: 7px 0;
+    color: #526176;
+    overflow-wrap: anywhere;
+}
+
+.contact-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.contact-actions a,
+.contact-actions button {
+    display: inline-block;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    margin: 0;
+}
+
+.call-contact-btn {
+    background: var(--green);
+    color: white;
+}
+
+.call-contact-btn:hover {
+    background: #11633f;
+}
+
+.edit-contact-btn {
+    background: var(--blue);
+    color: white;
+}
+
+.edit-contact-btn:hover {
+    background: var(--blue-dark);
+}
+
+.delete-contact-btn {
+    background: #c62828;
+    color: white;
+}
+
+.delete-contact-btn:hover {
+    background: #a51f1f;
+}
+
+#contactMessage {
+    font-weight: 650;
+    overflow-wrap: anywhere;
+    margin-top: 15px;
+}
+
+/* Footer */
+
+footer {
+    text-align: center;
+    padding: 24px 16px;
+    background: var(--navy);
+    color: white;
+    margin-top: 40px;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Tablet and mobile screens */
+
+@media (max-width: 700px) {
+    header {
+        padding: 32px 16px;
+    }
+
+    header p {
+        font-size: 15px;
+    }
+
+    .container {
+        padding: 0 14px;
+        margin: 20px auto;
+    }
+
+    .card {
+        padding: 20px;
+        margin-bottom: 18px;
+        border-radius: 13px;
+    }
+
+    h2 {
+        font-size: 21px;
+    }
+
+    .contacts-section {
+        width: calc(100% - 28px);
+        margin: 22px auto;
+        padding: 22px 18px;
+    }
+
+    .contact-actions {
+        flex-direction: column;
+    }
+
+    .contact-actions a,
+    .contact-actions button {
+        width: 100%;
+    }
+
+    #nearbyMap {
+        height: 340px;
+    }
+
+    .sos-panel {
+        margin: 18px 10px 0;
+        padding: 20px 16px;
+    }
+
+    .service-item {
+        padding: 16px;
+    }
+
+    .service-item a {
+        margin-right: 12px;
+    }
+}
+
+@media (max-width: 400px) {
+    .sos-button {
+        width: 100%;
+        max-width: 310px;
+        padding: 14px 12px;
+        font-size: 15px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .card button {
+        max-width: 100%;
+    }
+
+    #nearbyMap {
+        height: 290px;
+    }
+}
+
     </style>
 </head>
 

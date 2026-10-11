@@ -10,6 +10,58 @@
 />
 
 <style>
+    
+/* Main navigation bar */
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 16px max(22px, calc((100% - 1100px) / 2));
+    background: #ffffff;
+    border-bottom: 1px solid #e1e8f0;
+    box-shadow: 0 3px 12px rgba(20, 36, 59, 0.05);
+}
+
+.nav-brand {
+    color: #14243b;
+    font-size: 19px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.nav-links a {
+    color: #43536a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.nav-links a:hover {
+    color: #d92d3a;
+}
+
+@media (max-width: 700px) {
+    .main-nav {
+        padding: 16px;
+        align-items: flex-start;
+    }
+
+    .nav-links {
+        width: 100%;
+        gap: 12px 18px;
+    }
+}
+
 /* ========================================
    EMERGENCY HELP - MODERN WEBSITE DESIGN
    ======================================== */
@@ -577,9 +629,21 @@ footer p {
 </head>
 
 <body>
+    
+    <!-- Main Navigation -->
+    <nav class="main-nav" aria-label="Main navigation">
+        <a href="#" class="nav-brand">🚨 Emergency Help</a>
+
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#nearbyServices">Nearby Services</a>
+            <a href="#emergencyNumbers">Emergency Numbers</a>
+            <a href="#emergencyContacts">My Contacts</a>
+        </div>
+    </nav>
 
     <!-- Emergency SOS Button -->
-    <div class="sos-container">
+    <div class="container" id="nearbyServices"></div>
         <button
             type="button"
             id="sosButton"
@@ -708,7 +772,7 @@ footer p {
 
 
         <!-- Emergency Numbers -->
-        <div class="card">
+        <div class="card" id="emergencyNumbers">
             <h2>📞 Emergency Numbers (India)</h2>
             <p>Emergency response: <a href="tel:112">112</a></p>
             <p>Ambulance: <a href="tel:108">108</a></p>

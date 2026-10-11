@@ -31,9 +31,11 @@ public class NearbyServiceController {
             )
             .build();
 
+    // Try multiple Overpass servers if one is unavailable.
     private final List<String> servers = List.of(
             "https://overpass-api.de/api/interpreter",
-            "https://overpass.kumi.systems/api/interpreter"
+            "https://overpass.kumi.systems/api/interpreter",
+            "https://overpass.private.coffee/api/interpreter"
     );
 
     @GetMapping
@@ -42,31 +44,51 @@ public class NearbyServiceController {
             @RequestParam double lon,
             @RequestParam(defaultValue = "hospital") String type) {
 
-        if (!Double.isFinite(lat) || lat < -90 || lat > 90
-                || !Double.isFinite(lon) || lon < -180 || lon > 180) {
+        // Validate latitude and longitude.
+        if (!Double.isFinite(lat)
+                || lat < -90 || lat > 90
+                || !Double.isFinite(lon)
+                || lon < -180 || lon > 180) {
+
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Invalid coordinates");
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid latitude or longitude."
+            );
         }
 
+        // Allow only supported service categories.
         if (!List.of("hospital", "pharmacy", "police").contains(type)) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Invalid service type");
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid service type. Use hospital, pharmacy, or police."
+            );
         }
 
-        String query = "[out:json][timeout:25];"
-                + "nwr(around:5000," + lat + "," + lon + ")"
+        // Search for services within 5 km of the user's location.
+        String query =
+                "[out:json][timeout:40];"
+                + "nwr(around:5000,"
+                + lat + "," + lon + ")"
                 + "[amenity=" + type + "];"
                 + "out center tags;";
 
-        MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> form =
+                new LinkedMultiValueMap<>();
+
         form.add("data", query);
 
+        // Try each server until one returns valid results.
         for (String server : servers) {
             try {
+                System.out.println(
+                        "Trying nearby-services server: " + server
+                );
+
                 Map<?, ?> response = restClient.post()
                         .uri(server)
                         .contentType(
-                                MediaType.APPLICATION_FORM_URLENCODED)
+                                MediaType.APPLICATION_FORM_URLENCODED
+                        )
                         .accept(MediaType.APPLICATION_JSON)
                         .body(form)
                         .retrieve()
@@ -74,21 +96,38 @@ public class NearbyServiceController {
 
                 if (response != null
                         && response.get("elements") instanceof List<?> elements) {
+
+                    System.out.println(
+                            "Nearby search successful. Results: "
+                            + elements.size()
+                    );
+
                     return Map.of("elements", elements);
                 }
 
+                System.err.println(
+                        "Invalid response from server: " + server
+                );
+
             } catch (RestClientException ex) {
                 System.err.println(
-                        "Failed Overpass server: " + server);
+                        "Nearby server failed: " + server
+                );
+
                 System.err.println(
-                        "Error type: " + ex.getClass().getName());
-                System.err.println(
-                        "Error details: " + ex.getMessage());
+                        "Reason: " + ex.getMessage()
+                );
             }
         }
 
+        // All external servers failed.
+        System.err.println(
+                "All nearby-services servers failed."
+        );
+
         throw new ResponseStatusException(
                 HttpStatus.BAD_GATEWAY,
-                "Both map servers failed. Check the application terminal.");
+                "Nearby map services are temporarily unavailable. Please try again later."
+        );
     }
 }

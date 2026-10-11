@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emergency Help</title>
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 
     <style>
         * {
@@ -65,20 +67,16 @@
         }
 
         button:hover {
-            background: #a71919;
+            opacity: 0.85;
         }
 
         button:disabled {
-            opacity: 0.65;
-            cursor: wait;
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .service-button {
             background: #1769aa;
-        }
-
-        .service-button:hover {
-            background: #104d80;
         }
 
         #locationResult {
@@ -105,8 +103,10 @@
         }
 
         .loading {
-            color: #174c75;
-            background: #e8f3fc;
+            margin-top: 15px;
+            padding: 12px;
+            background: #fff3cd;
+            border-radius: 6px;
         }
 
         .service-results {
@@ -133,7 +133,7 @@
 
         .service-item a {
             display: inline-block;
-            margin: 8px 12px 0 0;
+            margin-top: 8px;
             color: #1769aa;
             font-weight: bold;
             text-decoration: none;
@@ -143,123 +143,37 @@
             text-decoration: underline;
         }
 
-        #nearbyMap {
-            height: 420px;
-            width: 100%;
-            border-radius: 12px;
-            margin-top: 18px;
-            z-index: 1;
-            border: 1px solid #d6e0ea;
-        }
-
-        .map-legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 14px;
-            font-size: 14px;
-        }
-
-        .legend-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-        }
-
-        .legend-dot {
-            display: inline-block;
-            width: 13px;
-            height: 13px;
-            border-radius: 50%;
-        }
-
-        .legend-hospital {
-            background: #d62828;
-        }
-
-        .legend-pharmacy {
-            background: #239b56;
-        }
-
-        .legend-police {
-            background: #2878d0;
-        }
-
-        .legend-user {
-            background: #6f42c1;
-        }
-
-        .service-map-marker {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 34px;
-            height: 34px;
-            border: 2px solid white;
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            box-shadow: 0 2px 7px rgba(0, 0, 0, 0.35);
-            color: white;
-            font-size: 17px;
-        }
-
-        .service-map-marker span {
-            transform: rotate(45deg);
-        }
-
-        .marker-hospital {
-            background: #d62828;
-        }
-
-        .marker-pharmacy {
-            background: #239b56;
-        }
-
-        .marker-police {
-            background: #2878d0;
-        }
-
-        .marker-user {
-            background: #6f42c1;
-        }
-
+        /* SOS section */
         .sos-container {
-            max-width: 900px;
-            margin: 18px auto 0;
-            padding: 0 20px;
+            text-align: center;
+            padding: 15px;
+            background: #fff;
         }
 
         .sos-button {
-            width: 100%;
             background: #b00020;
             font-size: 18px;
             font-weight: bold;
-            padding: 16px;
-            margin: 0;
-        }
-
-        .sos-button:hover {
-            background: #7d0017;
+            padding: 15px 25px;
         }
 
         .sos-panel {
-            background: #fff;
+            max-width: 500px;
+            margin: 15px auto;
+            padding: 20px;
             border: 2px solid #d62828;
             border-radius: 12px;
-            padding: 18px;
-            margin-top: 12px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+            background: #fff5f5;
         }
 
         .sos-call {
             display: block;
+            padding: 12px;
             margin: 10px 0;
-            padding: 13px;
             background: #1769aa;
-            color: #fff;
+            color: white;
             text-decoration: none;
-            font-weight: bold;
-            border-radius: 7px;
+            border-radius: 6px;
         }
 
         .sos-call.ambulance {
@@ -275,6 +189,7 @@
             color: #555;
         }
 
+        /* Emergency contacts */
         .contacts-section {
             max-width: 600px;
             margin: 30px auto;
@@ -311,16 +226,8 @@
             margin-top: 18px;
             padding: 13px;
             background: #176b3a;
-            color: white;
-            border: none;
-            border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
-            cursor: pointer;
-        }
-
-        .save-contact-btn:hover {
-            background: #10532c;
         }
 
         .contact-card {
@@ -345,7 +252,6 @@
 
         .contact-actions a,
         .contact-actions button {
-            display: inline-block;
             padding: 9px 13px;
             border: none;
             border-radius: 6px;
@@ -360,6 +266,11 @@
             color: white;
         }
 
+        .edit-contact-btn {
+            background: #1565c0;
+            color: white;
+        }
+
         .delete-contact-btn {
             background: #c62828;
             color: white;
@@ -367,15 +278,6 @@
 
         #contactMessage {
             font-weight: 600;
-            overflow-wrap: anywhere;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #222;
-            color: white;
-            margin-top: 30px;
         }
 
         @media (max-width: 600px) {
@@ -388,24 +290,35 @@
                 padding: 18px;
             }
 
-            .sos-container {
-                padding: 0 12px;
-            }
-
-            #nearbyMap {
-                height: 340px;
-            }
-
             .contacts-section {
-                margin: 20px 12px;
+                margin: 15px;
                 padding: 18px;
             }
+
+            .contact-actions {
+                flex-direction: column;
+            }
+
+            .contact-actions a,
+            .contact-actions button {
+                text-align: center;
+                width: 100%;
+            }
         }
+
+        #nearbyMap {
+    height: 400px;
+    width: 100%;
+    border-radius: 12px;
+    margin-top: 20px;
+    z-index: 1;
+}
     </style>
 </head>
 
 <body>
 
+    <!-- Emergency SOS Button -->
     <div class="sos-container">
         <button
             type="button"
@@ -437,13 +350,16 @@
                 🔥 Call Fire Services — 101
             </a>
 
-            <button type="button" class="sos-close" onclick="toggleSOSPanel(false)">
+            <button
+                type="button"
+                class="sos-close"
+                onclick="toggleSOSPanel(false)">
                 Close
             </button>
 
             <p class="sos-note">
-                Your device may ask you to confirm the call. If you are in immediate danger,
-                contact emergency services.
+                Your device may ask you to confirm the call.
+                If you are in immediate danger, contact emergency services.
             </p>
         </div>
     </div>
@@ -453,9 +369,10 @@
         <p>Find nearby emergency services quickly</p>
     </header>
 
-    <main class="container">
+    <div class="container">
 
-        <section class="card">
+        <!-- Find Location -->
+        <div class="card">
             <h2>📍 Find My Location</h2>
             <p>Allow location access to find emergency services near you.</p>
 
@@ -463,165 +380,157 @@
                 Find My Location
             </button>
 
-            <div id="locationResult" class="hidden" role="status" aria-live="polite"></div>
-        </section>
+            <div
+                id="locationResult"
+                class="hidden"
+                role="status"
+                aria-live="polite">
+            </div>
+        </div>
 
-        <section class="card">
+        <!-- Hospitals -->
+        <div class="card">
             <h2>🏥 Nearby Hospitals</h2>
             <p>Find hospitals near your current location.</p>
 
-            <button type="button" class="service-button" onclick="findService('hospital')">
+            <button
+                type="button"
+                class="service-button"
+                onclick="findService('hospital')">
                 Find Hospitals
             </button>
 
             <div id="hospitalResults" class="service-results"></div>
-        </section>
+        </div>
 
-        <section class="card">
+        <!-- Pharmacies -->
+        <div class="card">
             <h2>💊 Nearby Pharmacies</h2>
             <p>Find pharmacies near your current location.</p>
 
-            <button type="button" class="service-button" onclick="findService('pharmacy')">
+            <button
+                type="button"
+                class="service-button"
+                onclick="findService('pharmacy')">
                 Find Pharmacies
             </button>
 
             <div id="pharmacyResults" class="service-results"></div>
-        </section>
+        </div>
 
-        <section class="card">
+        <!-- Police Stations -->
+       
+        <!-- Police Stations -->
+        <div class="card">
             <h2>🚔 Nearby Police Stations</h2>
             <p>Find police stations near your current location.</p>
 
-            <button type="button" class="service-button" onclick="findService('police')">
+            <button
+                type="button"
+                class="service-button"
+                onclick="findService('police')">
                 Find Police Stations
             </button>
 
             <div id="policeResults" class="service-results"></div>
-        </section>
+        </div>
 
-        <section class="card">
+        <!-- Interactive Map -->
+        <div class="card">
             <h2>🗺️ Nearby Emergency Services Map</h2>
             <p>
-                Search for a service above to show its markers on the map.
-                Click a marker to view its name.
+                View nearby hospitals, pharmacies, and police stations
+                on the map.
             </p>
 
-            <div class="map-legend" aria-label="Map marker legend">
-                <span class="legend-item">
-                    <span class="legend-dot legend-hospital"></span>
-                    Hospitals
-                </span>
+            <div id="nearbyMap"></div>
+        </div>
 
-                <span class="legend-item">
-                    <span class="legend-dot legend-pharmacy"></span>
-                    Pharmacies
-                </span>
 
-                <span class="legend-item">
-                    <span class="legend-dot legend-police"></span>
-                    Police stations
-                </span>
-
-                <span class="legend-item">
-                    <span class="legend-dot legend-user"></span>
-                    Your location
-                </span>
-            </div>
-
-            <div id="nearbyMap" aria-label="Map showing nearby emergency services"></div>
-        </section>
-
-        <section class="card">
+        <!-- Emergency Numbers -->
+        <div class="card">
             <h2>📞 Emergency Numbers (India)</h2>
             <p>Emergency response: <a href="tel:112">112</a></p>
             <p>Ambulance: <a href="tel:108">108</a></p>
             <p>Fire service: <a href="tel:101">101</a></p>
             <p>Police: <a href="tel:100">100</a></p>
-        </section>
+        </div>
 
-    </main>
+    </div>
 
-    <footer>
+    <footer style="text-align:center;padding:20px;background:#222;color:white;margin-top:30px;">
         <p>Emergency Help Website | Stay Safe</p>
     </footer>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
         let currentLatitude = null;
         let currentLongitude = null;
         let currentAccuracy = null;
-        let userMarker = null;
+        
+const nearbyMap = L.map("nearbyMap").setView([9.9312, 76.2673], 12);
 
-        // Default starting view only; this is not the user's current location.
-        const nearbyMap = L.map("nearbyMap").setView([9.9312, 76.2673], 12);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(nearbyMap);
 
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(nearbyMap);
+let userMarker = null;
 
-        const serviceLayers = {
-            hospital: L.layerGroup().addTo(nearbyMap),
-            pharmacy: L.layerGroup().addTo(nearbyMap),
-            police: L.layerGroup().addTo(nearbyMap)
-        };
+const serviceLayers = {
+    hospital: L.layerGroup().addTo(nearbyMap),
+    pharmacy: L.layerGroup().addTo(nearbyMap),
+    police: L.layerGroup().addTo(nearbyMap)
+};
 
-        const markerDetails = {
-            hospital: {
-                colorClass: "marker-hospital",
-                icon: "✚",
-                label: "Hospital"
-            },
-            pharmacy: {
-                colorClass: "marker-pharmacy",
-                icon: "+",
-                label: "Pharmacy"
-            },
-            police: {
-                colorClass: "marker-police",
-                icon: "★",
-                label: "Police station"
-            }
-        };
 
-        const userIcon = L.divIcon({
-            className: "",
-            html: '<div class="service-map-marker marker-user"><span>●</span></div>',
-            iconSize: [34, 34],
-            iconAnchor: [17, 34],
-            popupAnchor: [0, -32]
-        });
+function updateMapWithServices(places, type) {
+    const layer = serviceLayers[type];
 
-        function createServiceIcon(type) {
-            const details = markerDetails[type] || {
-                colorClass: "marker-hospital",
-                icon: "•"
-            };
+    if (!layer) return;
 
-            return L.divIcon({
-                className: "",
-                html: '<div class="service-map-marker ' +
-                    details.colorClass + '"><span>' +
-                    details.icon + '</span></div>',
-                iconSize: [34, 34],
-                iconAnchor: [17, 34],
-                popupAnchor: [0, -32]
-            });
-        }
+    // Remove old markers for this category
+    layer.clearLayers();
+
+    places.forEach(place => {
+        const lat = place.lat ?? place.center?.lat;
+        const lon = place.lon ?? place.center?.lon;
+
+        if (lat == null || lon == null) return;
+
+        const tags = place.tags || {};
+
+        // Safely create the popup content
+        const popup = document.createElement("div");
+        const name = document.createElement("strong");
+
+        name.textContent = tags.name || `Unnamed ${type}`;
+        popup.appendChild(name);
+        popup.appendChild(document.createElement("br"));
+        popup.appendChild(document.createTextNode(type));
+
+        L.marker([lat, lon])
+            .bindPopup(popup)
+            .addTo(layer);
+    });
+}
+
+
 
         function showMessage(message, type) {
             const result = document.getElementById("locationResult");
-
             result.className = type;
             result.textContent = message;
         }
 
+        // Find the user's current location
         function findMyLocation() {
             const result = document.getElementById("locationResult");
 
             result.className = "loading";
-            result.textContent = "Finding your precise location... Please wait.";
+            result.textContent =
+                "Finding your location... Please wait.";
 
             if (!navigator.geolocation) {
                 showMessage(
@@ -636,33 +545,26 @@
                     currentLatitude = position.coords.latitude;
                     currentLongitude = position.coords.longitude;
                     currentAccuracy = position.coords.accuracy;
+                    
+nearbyMap.setView([currentLatitude, currentLongitude], 14);
 
-                    nearbyMap.setView(
-                        [currentLatitude, currentLongitude],
-                        14
-                    );
+if (userMarker) {
+    nearbyMap.removeLayer(userMarker);
+}
 
-                    if (userMarker) {
-                        nearbyMap.removeLayer(userMarker);
-                    }
+userMarker = L.marker([currentLatitude, currentLongitude])
+    .addTo(nearbyMap)
+    .bindPopup("Your current location");
 
-                    userMarker = L.marker(
-                        [currentLatitude, currentLongitude],
-                        { icon: userIcon }
-                    )
-                        .addTo(nearbyMap)
-                        .bindPopup("Your current location");
 
                     result.className = "success";
-                    result.textContent =
-                        "Location detected successfully!\n" +
-                        "Latitude: " + currentLatitude.toFixed(6) + "\n" +
-                        "Longitude: " + currentLongitude.toFixed(6) + "\n" +
+
+                    result.innerHTML =
+                        "<strong>Location detected successfully!</strong><br>" +
+                        "Latitude: " + currentLatitude.toFixed(6) + "<br>" +
+                        "Longitude: " + currentLongitude.toFixed(6) + "<br>" +
                         "Estimated accuracy: " +
-                        Math.round(currentAccuracy) + " metres" +
-                        (currentAccuracy > 1000
-                            ? "\nLocation is approximate. Your device may not be providing a precise location."
-                            : "\nLocation accuracy looks better.");
+                        Math.round(currentAccuracy) + " metres";
 
                     console.log("Latitude:", currentLatitude);
                     console.log("Longitude:", currentLongitude);
@@ -694,111 +596,117 @@
             );
         }
 
-        async function findService(type) {
-            const resultIds = {
-                hospital: "hospitalResults",
-                pharmacy: "pharmacyResults",
-                police: "policeResults"
-            };
+        // Find nearby hospitals, pharmacies, or police stations
+        
+async function findService(type) {
+    const resultIds = {
+        hospital: "hospitalResults",
+        pharmacy: "pharmacyResults",
+        police: "policeResults"
+    };
 
-            const container = document.getElementById(resultIds[type]);
+    const container = document.getElementById(resultIds[type]);
 
-            if (!container) {
-                console.error("Results container not found:", type);
-                return;
-            }
+    if (!container) {
+        console.error("Invalid service type:", type);
+        return;
+    }
 
-            if (currentLatitude === null || currentLongitude === null) {
-                container.textContent =
-                    "Please click Find My Location first. Location detection will start now; click this button again after your location is detected.";
+    if (currentLatitude === null || currentLongitude === null) {
+        container.textContent =
+            "Please allow location access first. Detecting your location now...";
 
-                findMyLocation();
-                return;
-            }
+        findMyLocation();
+        return;
+    }
 
-            container.textContent =
-                "Searching for nearby " + type + " services...";
+    container.textContent = "Searching for nearby " + type + " services...";
 
-            try {
-                const url =
-                    "/api/nearby?lat=" +
-                    encodeURIComponent(currentLatitude) +
-                    "&lon=" +
-                    encodeURIComponent(currentLongitude) +
-                    "&type=" +
-                    encodeURIComponent(type);
+    try {
+        const url = "/api/nearby?lat=" +
+            encodeURIComponent(currentLatitude) +
+            "&lon=" +
+            encodeURIComponent(currentLongitude) +
+            "&type=" +
+            encodeURIComponent(type);
 
-                const response = await fetch(url);
+        const response = await fetch(url);
+        const responseText = await response.text();
 
-                if (!response.ok) {
-                    const details = await response.text();
+        let data = {};
 
-                    throw new Error(
-                        "Server returned " + response.status +
-                        (details ? ": " + details : "")
-                    );
-                }
-
-                const data = await response.json();
-
-                if (!data || !Array.isArray(data.elements)) {
-                    throw new Error(
-                        "Unexpected response from the server."
-                    );
-                }
-
-                displayServices(data.elements, container, type);
-
-            } catch (error) {
-                console.error("Nearby service search failed:", error);
-
-                container.textContent =
-                    "Could not load nearby " + type +
-                    " services. Check that your Spring Boot application is running. Details: " +
-                    error.message;
-            }
+        try {
+            data = responseText ? JSON.parse(responseText) : {};
+        } catch {
+            data = { message: responseText };
         }
 
-        function updateMapWithServices(places, type) {
-            const layer = serviceLayers[type];
+        if (!response.ok) {
+            console.error("Nearby API error:", response.status, data);
 
-            if (!layer) {
-                return;
-            }
-
-            // Clear markers for this category only.
-            // Markers from other searched categories remain visible.
-            layer.clearLayers();
-
-            places.forEach(function (place) {
-                const latitude = place.lat ?? place.center?.lat;
-                const longitude = place.lon ?? place.center?.lon;
-
-                if (latitude == null || longitude == null) {
-                    return;
-                }
-
-                const tags = place.tags || {};
-                const popup = document.createElement("div");
-                const name = document.createElement("strong");
-
-                name.textContent = tags.name || "Unnamed " + type;
-
-                popup.appendChild(name);
-                popup.appendChild(document.createElement("br"));
-                popup.appendChild(
-                    document.createTextNode(markerDetails[type].label)
+            if (response.status === 502) {
+                throw new Error(
+                    "The nearby-services server or its map-data provider " +
+                    "is temporarily unavailable. Please try again later."
                 );
+            }
 
-                L.marker(
-                    [latitude, longitude],
-                    { icon: createServiceIcon(type) }
-                )
-                    .bindPopup(popup)
-                    .addTo(layer);
-            });
+            throw new Error(
+                data.message ||
+                data.error ||
+                "Server returned HTTP " + response.status
+            );
         }
 
+        if (!Array.isArray(data.elements)) {
+            throw new Error("The server returned an unexpected response.");
+        }
+
+        displayServices(data.elements, container, type);
+
+    } catch (error) {
+        console.error("Nearby service search failed:", error);
+
+        container.replaceChildren();
+
+        const message = document.createElement("p");
+        message.className = "error";
+        message.textContent =
+            "Could not load nearby " + type + " services. " +
+            error.message;
+
+        container.appendChild(message);
+    }
+}
+
+
+        // Display nearby services
+        
+        // Calculate distance between two GPS coordinates in kilometres
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const earthRadius = 6371;
+
+            const toRadians = degrees => degrees * Math.PI / 180;
+
+            const dLat = toRadians(lat2 - lat1);
+            const dLon = toRadians(lon2 - lon1);
+
+            const a =
+                Math.sin(dLat / 2) ** 2 +
+                Math.cos(toRadians(lat1)) *
+                Math.cos(toRadians(lat2)) *
+                Math.sin(dLon / 2) ** 2;
+
+            const c = 2 * Math.atan2(
+                Math.sqrt(a),
+                Math.sqrt(1 - a)
+            );
+
+            return earthRadius * c;
+        }
+
+        
+        // Display all nearby services, sorted by distance
         function displayServices(places, container, type) {
             updateMapWithServices(places, type);
             container.replaceChildren();
@@ -806,57 +714,113 @@
             if (places.length === 0) {
                 container.textContent =
                     "No mapped " + type +
-                    " services found within the API search area around your detected location.";
+                    " services found within the searched area.";
                 return;
             }
 
+            // Calculate distance for each service
+            const sortedPlaces = places
+                .map(function (place) {
+                    const latitude = place.lat ?? place.center?.lat;
+                    const longitude = place.lon ?? place.center?.lon;
+
+                    let distance = Infinity;
+
+                    if (
+                        latitude != null &&
+                        longitude != null &&
+                        currentLatitude != null &&
+                        currentLongitude != null
+                    ) {
+                        distance = calculateDistance(
+                            currentLatitude,
+                            currentLongitude,
+                            Number(latitude),
+                            Number(longitude)
+                        );
+                    }
+
+                    return {
+                        place: place,
+                        latitude: latitude,
+                        longitude: longitude,
+                        distance: distance
+                    };
+                })
+                .sort((a, b) => a.distance - b.distance);
+
             const heading = document.createElement("p");
             heading.textContent =
-                "Found " + places.length + " nearby results:";
+                "Found " + sortedPlaces.length +
+                " services, sorted from nearest to farthest.";
 
             container.appendChild(heading);
 
-            places.forEach(function (place) {
+            sortedPlaces.forEach(function (result, index) {
+                const place = result.place;
                 const tags = place.tags || {};
-                const item = document.createElement("div");
 
+                const item = document.createElement("div");
                 item.className = "service-item";
 
+                // Service name
                 const name = document.createElement("h3");
-                name.textContent = tags.name || "Unnamed " + type;
+                name.textContent =
+                    (index + 1) + ". " +
+                    (tags.name || "Unnamed " + type);
 
                 item.appendChild(name);
 
+                // Distance
+                const distanceText = document.createElement("p");
+                distanceText.style.fontWeight = "bold";
+                distanceText.style.color = "#176b3a";
+
+                if (Number.isFinite(result.distance)) {
+                    distanceText.textContent =
+                        "📍 " +
+                        (result.distance < 1
+                            ? Math.round(result.distance * 1000) + " metres away"
+                            : result.distance.toFixed(2) + " km away");
+                } else {
+                    distanceText.textContent =
+                        "Distance unavailable";
+                }
+
+                item.appendChild(distanceText);
+
+                // Address
                 const addressParts = [
                     tags["addr:housenumber"],
                     tags["addr:street"],
                     tags["addr:suburb"],
                     tags["addr:city"] ||
-                        tags["addr:town"] ||
-                        tags["addr:village"],
+                    tags["addr:town"] ||
+                    tags["addr:village"],
                     tags["addr:postcode"]
                 ].filter(Boolean);
 
                 const address = document.createElement("p");
-
                 address.textContent = addressParts.length
                     ? addressParts.join(", ")
                     : "Address not available in map data";
 
                 item.appendChild(address);
 
-                const latitude = place.lat ?? place.center?.lat;
-                const longitude = place.lon ?? place.center?.lon;
-
-                if (latitude != null && longitude != null) {
+                // Map and directions links
+                if (
+                    result.latitude != null &&
+                    result.longitude != null
+                ) {
                     const mapLink = document.createElement("a");
 
                     mapLink.href =
                         "https://www.openstreetmap.org/?mlat=" +
-                        encodeURIComponent(latitude) +
+                        encodeURIComponent(result.latitude) +
                         "&mlon=" +
-                        encodeURIComponent(longitude) +
-                        "#map=18/" + latitude + "/" + longitude;
+                        encodeURIComponent(result.longitude) +
+                        "#map=18/" +
+                        result.latitude + "/" + result.longitude;
 
                     mapLink.target = "_blank";
                     mapLink.rel = "noopener noreferrer";
@@ -868,11 +832,14 @@
 
                     directionsLink.href =
                         "https://www.google.com/maps/dir/?api=1&destination=" +
-                        encodeURIComponent(latitude + "," + longitude);
+                        encodeURIComponent(
+                            result.latitude + "," + result.longitude
+                        );
 
                     directionsLink.target = "_blank";
                     directionsLink.rel = "noopener noreferrer";
                     directionsLink.textContent = "Get Directions";
+                    directionsLink.style.marginLeft = "15px";
 
                     item.appendChild(directionsLink);
                 }
@@ -881,6 +848,8 @@
             });
         }
 
+
+        // Open or close the SOS panel
         function toggleSOSPanel(forceOpen) {
             const panel = document.getElementById("sosPanel");
             const button = document.getElementById("sosButton");
@@ -895,12 +864,18 @@
                     : panel.hidden;
 
             panel.hidden = !shouldOpen;
-            button.setAttribute("aria-expanded", String(shouldOpen));
+
+            button.setAttribute(
+                "aria-expanded",
+                String(shouldOpen)
+            );
         }
     </script>
 
+    <!-- Emergency Contacts Section -->
     <section id="emergencyContacts" class="contacts-section">
         <h2>📇 My Emergency Contacts</h2>
+
         <p>Save trusted people you can contact during an emergency.</p>
 
         <form id="contactForm">
@@ -947,6 +922,7 @@
 
         const CONTACTS_API = "/api/contacts";
 
+        // Load and display contacts from the database
         async function renderContacts() {
             contactList.replaceChildren();
 
@@ -966,7 +942,7 @@
 
                 contactList.replaceChildren();
 
-                if (!Array.isArray(contacts) || contacts.length === 0) {
+                if (contacts.length === 0) {
                     const emptyMessage = document.createElement("p");
 
                     emptyMessage.textContent =
@@ -996,9 +972,17 @@
                     const callButton = document.createElement("a");
                     callButton.className = "call-contact-btn";
                     callButton.textContent = "📞 Call";
-
                     callButton.href =
-                        "tel:" + String(contact.phone).replace(/[^\d+]/g, "");
+                        "tel:" + contact.phone.replace(/[^\d+]/g, "");
+
+                    const editButton = document.createElement("button");
+                    editButton.className = "edit-contact-btn";
+                    editButton.textContent = "✏️ Edit";
+                    editButton.type = "button";
+
+                    editButton.addEventListener("click", function () {
+                        editContact(contact);
+                    });
 
                     const deleteButton = document.createElement("button");
                     deleteButton.className = "delete-contact-btn";
@@ -1009,8 +993,18 @@
                         deleteContact(contact.id);
                     });
 
-                    actions.append(callButton, deleteButton);
-                    card.append(name, relation, phone, actions);
+                    actions.append(
+                        callButton,
+                        editButton,
+                        deleteButton
+                    );
+
+                    card.append(
+                        name,
+                        relation,
+                        phone,
+                        actions
+                    );
 
                     contactList.appendChild(card);
                 });
@@ -1028,18 +1022,186 @@
             }
         }
 
+        
+        // Save a new emergency contact with clear validation messages
         contactForm.addEventListener("submit", async function (event) {
             event.preventDefault();
 
-            const name =
-                document.getElementById("contactName").value.trim();
+            const name = document.getElementById("contactName").value.trim();
+            const relation = document.getElementById("contactRelation").value.trim();
+            const phone = document.getElementById("contactPhone").value.trim();
 
-            const relation =
-                document.getElementById("contactRelation").value.trim();
+            // Reset the message before validating
+            contactMessage.className = "";
+            contactMessage.textContent = "";
 
-            const phone =
-                document.getElementById("contactPhone").value.trim();
+            // Check required fields
+            if (!name || !relation || !phone) {
+                contactMessage.textContent =
+                    "Please fill in your name, relationship and phone number.";
+                contactMessage.className = "error";
+                return;
+            }
 
+            // Check field lengths
+            if (name.length > 100) {
+                contactMessage.textContent =
+                    "Contact name must not exceed 100 characters.";
+                contactMessage.className = "error";
+                return;
+            }
+
+            if (relation.length > 50) {
+                contactMessage.textContent =
+                    "Relationship must not exceed 50 characters.";
+                contactMessage.className = "error";
+                return;
+            }
+
+            // Check phone number format
+            const digits = phone.replace(/\D/g, "");
+
+            if (!/^\+?[0-9() -]+$/.test(phone) ||
+                digits.length < 7 ||
+                digits.length > 15) {
+                contactMessage.textContent =
+                    "Please enter a valid phone number containing 7 to 15 digits.";
+                contactMessage.className = "error";
+                return;
+            }
+
+            const saveButton = contactForm.querySelector(
+                'button[type="submit"]'
+            );
+
+            saveButton.disabled = true;
+            contactMessage.textContent = "Saving your emergency contact...";
+            contactMessage.className = "loading";
+
+            try {
+                const response = await fetch(CONTACTS_API, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        relation: relation,
+                        phone: phone
+                    })
+                });
+
+                // Read the response safely, whether JSON or plain text
+                const responseText = await response.text();
+                let responseBody = {};
+
+                if (responseText) {
+                    try {
+                        responseBody = JSON.parse(responseText);
+                    } catch {
+                        responseBody = { message: responseText };
+                    }
+                }
+
+                if (!response.ok) {
+                    const serverMessage =
+                        responseBody.detail ||
+                        responseBody.message ||
+                        responseBody.title ||
+                        (typeof responseBody === "string"
+                            ? responseBody
+                            : null);
+
+                    throw new Error(
+                        serverMessage ||
+                        "The server could not save your contact. Please try again."
+                    );
+                }
+
+                contactForm.reset();
+
+                contactMessage.textContent =
+                    "Emergency contact saved successfully!";
+                contactMessage.className = "success";
+
+                await renderContacts();
+
+            } catch (error) {
+                console.error("Save contact error:", error);
+
+                contactMessage.textContent =
+                    "Unable to save contact: " + error.message;
+
+                contactMessage.className = "error";
+
+            } finally {
+                saveButton.disabled = false;
+            }
+        });
+
+
+        // Delete an emergency contact
+        async function deleteContact(contactId) {
+            if (!confirm("Are you sure you want to delete this contact?")) {
+                return;
+            }
+
+            contactMessage.textContent = "Deleting contact...";
+
+            try {
+                const response = await fetch(
+                    CONTACTS_API + "/" + encodeURIComponent(contactId),
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Could not delete contact.");
+                }
+
+                contactMessage.textContent = "Contact deleted.";
+
+                await renderContacts();
+
+            } catch (error) {
+                contactMessage.textContent =
+                    "Delete failed: " + error.message;
+            }
+        }
+
+        // Edit an existing emergency contact
+        async function editContact(contact) {
+            const newName = prompt(
+                "Enter contact name:",
+                contact.name
+            );
+
+            if (newName === null) {
+                return;
+            }
+
+            const newRelation = prompt(
+                "Enter relationship:",
+                contact.relation
+            );
+
+            if (newRelation === null) {
+                return;
+            }
+
+            const newPhone = prompt(
+                "Enter phone number:",
+                contact.phone
+            );
+
+            if (newPhone === null) {
+                return;
+            }
+
+            const name = newName.trim();
+            const relation = newRelation.trim();
+            const phone = newPhone.trim();
             const digits = phone.replace(/\D/g, "");
 
             if (!name || !relation || !phone) {
@@ -1058,77 +1220,48 @@
                 return;
             }
 
-            const saveButton = contactForm.querySelector(
-                'button[type="submit"]'
-            );
-
-            saveButton.disabled = true;
-            contactMessage.textContent = "Saving contact...";
+            contactMessage.textContent = "Updating contact...";
 
             try {
-                const response = await fetch(CONTACTS_API, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        name: name,
-                        relation: relation,
-                        phone: phone
-                    })
-                });
+                const response = await fetch(
+                    CONTACTS_API + "/" + encodeURIComponent(contact.id),
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            relation: relation,
+                            phone: phone
+                        })
+                    }
+                );
 
                 if (!response.ok) {
-                    const errorBody = await response.json().catch(() => ({}));
+                    const errorBody = await response
+                        .json()
+                        .catch(() => ({}));
 
                     throw new Error(
                         errorBody.detail ||
                         errorBody.message ||
-                        "Could not save contact."
+                        "Could not update contact."
                     );
                 }
 
-                contactForm.reset();
-                contactMessage.textContent = "Contact saved to MySQL!";
+                contactMessage.textContent =
+                    "Contact updated successfully!";
 
                 await renderContacts();
 
             } catch (error) {
                 contactMessage.textContent =
-                    "Save failed: " + error.message;
-
-            } finally {
-                saveButton.disabled = false;
-            }
-        });
-
-        async function deleteContact(contactId) {
-            if (!confirm("Are you sure you want to delete this contact?")) {
-                return;
-            }
-
-            contactMessage.textContent = "Deleting contact...";
-
-            try {
-                const response = await fetch(
-                    CONTACTS_API + "/" + encodeURIComponent(contactId),
-                    { method: "DELETE" }
-                );
-
-                if (!response.ok) {
-                    throw new Error("Could not delete contact.");
-                }
-
-                contactMessage.textContent = "Contact deleted.";
-
-                await renderContacts();
-
-            } catch (error) {
-                contactMessage.textContent =
-                    "Delete failed: " + error.message;
+                    "Update failed: " + error.message;
             }
         }
 
+        // Load contacts when the page opens
         renderContacts();
     </script>
 
